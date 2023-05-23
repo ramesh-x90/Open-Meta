@@ -80,6 +80,7 @@ public class CharacterController : MonoBehaviour
             rigidBody.velocity = new Vector3(moveVector.x , rigidBody.velocity.y , moveVector.z );
 
             rotatePlayer();
+
         }
 
     }
