@@ -68,11 +68,8 @@ public class CharacterController : NetworkBehaviour
     // Update is called once per frame
     void Update()
     {
-        movePlayer();
-
-
-
-
+        if (isLocalPlayer)
+            movePlayer();
     }
 
     private void rotatePlayer()
