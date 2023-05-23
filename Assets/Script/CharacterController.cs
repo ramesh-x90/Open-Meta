@@ -1,3 +1,4 @@
+using Mirror;
 using System;
 using UnityEngine;
 using UnityEngine.Events;
@@ -7,7 +8,7 @@ public enum MovingDirection
     FORWARD,BACKWORK,LEFT,RIGHT,NONE
 }
 
-public class CharacterController : MonoBehaviour
+public class CharacterController : NetworkBehaviour
 {
     // Start is called before the first frame update
     [Range(0f, 50f)]
@@ -23,12 +24,17 @@ public class CharacterController : MonoBehaviour
     private InputHandler inputHandler;
 
     [SerializeField]
-    private Transform camTransform = null;
+    private CamerController cameraController = null;
 
     public MovingDirection MovingDirection
     {
+
+
         get 
         {
+            if(!isLocalPlayer)
+                return MovingDirection.NONE;
+
             if(inputHandler.MovementInput.z > 0)
                 return MovingDirection.FORWARD;
             else if (inputHandler.MovementInput.z < 0) 
@@ -49,7 +55,14 @@ public class CharacterController : MonoBehaviour
 
     void Start()
     {
+        if (!isLocalPlayer)
+        {
+            Destroy(this);
+            return;
+        }
 
+        inputHandler = FindObjectOfType<InputHandler>();
+        cameraController = GetComponent<CamerController>();
     }
 
     // Update is called once per frame
@@ -65,7 +78,7 @@ public class CharacterController : MonoBehaviour
     private void rotatePlayer()
     {
         //transform.Rotate(0f , inputHandler.MouseInput.x * inputHandler.MouseSencivity, 0f);
-        transform.rotation = Quaternion.Euler(0f, camTransform.eulerAngles.y, 0f);
+        this.gameObject.transform.rotation = Quaternion.Euler(0f, cameraController.CinemachineFreeLook.m_XAxis.Value, 0f);
 
     }
 
@@ -75,8 +88,8 @@ public class CharacterController : MonoBehaviour
         {
             Vector3 vector3 = inputHandler.MovementInput;
             vector3.x *= movementSpeed * 0.1f;
-            vector3.z *= vector3.z < 0 ? movementSpeed * 0.4f : movementSpeed;
-            Vector3 moveVector = camTransform.TransformDirection(vector3);
+            vector3.z *= vector3.z < 0 ? movementSpeed * 0.3f : movementSpeed;
+            Vector3 moveVector = transform.TransformDirection(vector3);
             rigidBody.velocity = new Vector3(moveVector.x , rigidBody.velocity.y , moveVector.z );
 
             rotatePlayer();

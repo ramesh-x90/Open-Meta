@@ -1,8 +1,9 @@
+using Mirror;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerStateManager : MonoBehaviour
+public class PlayerStateManager : NetworkBehaviour
 {
     // Start is called before the first frame update
 
@@ -65,6 +66,11 @@ public class PlayerStateManager : MonoBehaviour
 
     void Start()
     {
+        if (!isLocalPlayer)
+        {
+            Destroy(this);
+            return;
+        }
 
         _idle = new Idle(this);
         _running = new RunningForward(this);
@@ -81,7 +87,8 @@ public class PlayerStateManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        currentState.UpdateState();
+        if(isLocalPlayer)
+            currentState.UpdateState();
     }
 
     public void SwitchState(PlayerState playerState)

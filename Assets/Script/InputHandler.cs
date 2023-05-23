@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Mirror;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
@@ -15,7 +16,7 @@ enum InputEvents
 }
 
 
-class InputHandler : MonoBehaviour
+class InputHandler : NetworkBehaviour
 {
     private Vector3 _movementInput;
     public Vector3 MovementInput
@@ -61,7 +62,7 @@ class InputHandler : MonoBehaviour
 
     private void Start()
     {
-
+        
     }
 
     private void Update()
@@ -72,14 +73,14 @@ class InputHandler : MonoBehaviour
 
     private void OnApplicationFocus(bool focus)
     {
-        if (focus)
-        {
-            Cursor.lockState = CursorLockMode.Locked;
-        }
-        else
-        {
-            Cursor.lockState = CursorLockMode.None;
-        }
+        //if (focus)
+        //{
+        //    Cursor.lockState = CursorLockMode.Locked;
+        //}
+        //else
+        //{
+        //    Cursor.lockState = CursorLockMode.None;
+        //}
     }
 
 

@@ -1,35 +1,39 @@
+using Cinemachine;
+using Mirror;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CamerController : MonoBehaviour
+public class CamerController : NetworkBehaviour
 {
     [SerializeField]
-    private float xRotation;
+    private CinemachineFreeLook cinemachineFreeLook = null;
 
-    [SerializeField] 
-    private InputHandler inputHandler;
+    public CinemachineFreeLook CinemachineFreeLook
+    {
+        get { return cinemachineFreeLook;}
+    }
 
     // Start is called before the first frame update
     void Start()
     {
-        
+
+        if (!isLocalPlayer)
+        {
+            Destroy(this);
+            return;
+        }
+
+        cinemachineFreeLook = FindObjectOfType<CinemachineFreeLook>();
+        cinemachineFreeLook.Follow = this.gameObject.transform;
+        cinemachineFreeLook.LookAt = this.gameObject.transform;
+
     }
 
     // Update is called once per frame
     void Update()
     {
-        
-        camerRotation();
 
     }
 
-
-    void camerRotation()
-    {
-        xRotation -= inputHandler.MouseInput.y * inputHandler.MouseSencivity;
-        xRotation = Mathf.Clamp(xRotation, -80f, 40f);
-
-        transform.localRotation = Quaternion.Euler(xRotation, 0f, 0f);
-    }
 }
